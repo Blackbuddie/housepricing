@@ -22,14 +22,37 @@ def predict_api():
     output=model.predict(new_data)
     print(output[0])
     return jsonify(output[0])
-@app.route('/predict',methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
-    data = [float(x) for x in request.form.values()]
-    final_input = scaler.transform(np.array(data).reshape(1, -1))
-    print(final_input)
-    output = model.predict(final_input)[0]
-    return render_template('home.html', prediction_text='The predicted House price is {}'.format(output))
 
+    crim = float(request.form['crim'])
+    zn = float(request.form['zn'])
+    indus = float(request.form['indus'])
+    chas = float(request.form['chas'])
+    nox = float(request.form['nox'])
+    rm = float(request.form['rm'])
+    age = float(request.form['age'])
+    dis = float(request.form['dis'])
+    rad = float(request.form['rad'])
+    tax = float(request.form['tax'])
+    ptratio = float(request.form['ptratio'])
+    b = float(request.form['b'])
+    lstat = float(request.form['lstat'])
+
+    data = [[
+        crim, zn, indus, chas, nox,
+        rm, age, dis, rad, tax,
+        ptratio, b, lstat
+    ]]
+
+    final_input = scaler.transform(data)
+
+    prediction = model.predict(final_input)[0]
+
+    return render_template(
+        'home.html',
+        prediction_text=f"Estimated House Price: ${prediction*1000:,.0f}"
+    )
 
 if __name__=="__main__":
     app.run(debug=True)

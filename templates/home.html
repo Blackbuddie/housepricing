@@ -1,99 +1,218 @@
-```html
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+<meta charset="UTF-8">
 <title>House Price Prediction</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 
-body{
-    background:#1f2937;
-    font-family:Arial;
-    color:white;
-    text-align:center;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
 }
 
-.login{
-    width:420px;
-    margin:auto;
-    margin-top:60px;
-    background:#111827;
-    padding:40px;
-    border-radius:10px;
+body{
+background:linear-gradient(135deg,#0f172a,#1e293b);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+.card{
+width:650px;
+background:#0b1220;
+padding:40px;
+border-radius:14px;
+box-shadow:0 20px 50px rgba(0,0,0,0.6);
 }
 
 h1{
-    margin-bottom:25px;
+text-align:center;
+margin-bottom:25px;
 }
 
-input{
-    width:90%;
-    padding:10px;
-    margin:8px;
-    border:none;
-    border-radius:5px;
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+}
+
+label{
+font-size:13px;
+color:#9ca3af;
+}
+
+input[type=range]{
+width:100%;
+}
+
+.value{
+font-size:12px;
+color:#60a5fa;
 }
 
 button{
-    margin-top:15px;
-    padding:12px;
-    width:95%;
-    border:none;
-    border-radius:5px;
-    background:#3b82f6;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
+margin-top:25px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:8px;
+background:#3b82f6;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:.25s;
 }
 
 button:hover{
-    background:#2563eb;
+background:#2563eb;
 }
 
 .result{
-    margin-top:20px;
-    font-size:20px;
-    color:#22c55e;
+margin-top:20px;
+padding:15px;
+background:#022c22;
+border-radius:8px;
+color:#4ade80;
+text-align:center;
+font-size:20px;
+font-weight:600;
 }
 
 </style>
+
+<script>
+
+function updateValue(id,value){
+document.getElementById(id).innerText=value;
+}
+
+</script>
+
 </head>
 
 <body>
 
-<div class="login">
+<div class="card">
 
-<h1>California House Price Prediction</h1>
+<h1>🏡 House Price Prediction</h1>
 
 <form action="{{ url_for('predict') }}" method="post">
 
-<input type="text" name="MedInc" placeholder="Median Income" required><br>
+<div class="grid">
 
-<input type="text" name="HouseAge" placeholder="House Age" required><br>
+<div>
+<label>Crime Rate</label>
+<input type="range" name="crim" min="0" max="100" step="0.01"
+oninput="updateValue('crimVal',this.value)">
+<div class="value">Value: <span id="crimVal">0</span></div>
+</div>
 
-<input type="text" name="AveRooms" placeholder="Average Rooms" required><br>
+<div>
+<label>Residential Zoning %</label>
+<input type="range" name="zn" min="0" max="100" step="1"
+oninput="updateValue('znVal',this.value)">
+<div class="value">Value: <span id="znVal">0</span></div>
+</div>
 
-<input type="text" name="AveBedrms" placeholder="Average Bedrooms" required><br>
+<div>
+<label>Industrial Area %</label>
+<input type="range" name="indus" min="0" max="30" step="0.1"
+oninput="updateValue('indusVal',this.value)">
+<div class="value">Value: <span id="indusVal">0</span></div>
+</div>
 
-<input type="text" name="Population" placeholder="Population" required><br>
+<div>
+<label>Near Charles River</label>
+<select name="chas">
+<option value="0">No</option>
+<option value="1">Yes</option>
+</select>
+</div>
 
-<input type="text" name="AveOccup" placeholder="Average Occupancy" required><br>
+<div>
+<label>Pollution Level (NOX)</label>
+<input type="range" name="nox" min="0.3" max="0.9" step="0.01"
+oninput="updateValue('noxVal',this.value)">
+<div class="value">Value: <span id="noxVal">0.3</span></div>
+</div>
 
-<input type="text" name="Latitude" placeholder="Latitude" required><br>
+<div>
+<label>Average Rooms</label>
+<input type="range" name="rm" min="3" max="9" step="0.1"
+oninput="updateValue('rmVal',this.value)">
+<div class="value">Value: <span id="rmVal">3</span></div>
+</div>
 
-<input type="text" name="Longitude" placeholder="Longitude" required><br>
+<div>
+<label>House Age %</label>
+<input type="range" name="age" min="0" max="100" step="1"
+oninput="updateValue('ageVal',this.value)">
+<div class="value">Value: <span id="ageVal">0</span></div>
+</div>
 
-<button type="submit">Predict Price</button>
+<div>
+<label>Distance to Job Centers</label>
+<input type="range" name="dis" min="1" max="12" step="0.1"
+oninput="updateValue('disVal',this.value)">
+<div class="value">Value: <span id="disVal">1</span></div>
+</div>
+
+<div>
+<label>Highway Accessibility</label>
+<input type="range" name="rad" min="1" max="24" step="1"
+oninput="updateValue('radVal',this.value)">
+<div class="value">Value: <span id="radVal">1</span></div>
+</div>
+
+<div>
+<label>Property Tax Rate</label>
+<input type="range" name="tax" min="150" max="750" step="1"
+oninput="updateValue('taxVal',this.value)">
+<div class="value">Value: <span id="taxVal">150</span></div>
+</div>
+
+<div>
+<label>Student Teacher Ratio</label>
+<input type="range" name="ptratio" min="12" max="25" step="0.1"
+oninput="updateValue('ptratioVal',this.value)">
+<div class="value">Value: <span id="ptratioVal">12</span></div>
+</div>
+
+<div>
+<label>B Feature</label>
+<input type="range" name="b" min="0" max="400" step="1"
+oninput="updateValue('bVal',this.value)">
+<div class="value">Value: <span id="bVal">0</span></div>
+</div>
+
+<div>
+<label>Lower Income Population %</label>
+<input type="range" name="lstat" min="1" max="40" step="0.1"
+oninput="updateValue('lstatVal',this.value)">
+<div class="value">Value: <span id="lstatVal">1</span></div>
+</div>
+
+</div>
+
+<button type="submit">Predict House Price</button>
 
 </form>
 
+{% if prediction_text %}
 <div class="result">
 {{ prediction_text }}
 </div>
+{% endif %}
 
 </div>
 
 </body>
 </html>
-```
